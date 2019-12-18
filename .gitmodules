@@ -1,0 +1,6 @@
+[submodule "Libs/libfacedetection"]
+	path = Libs/libfacedetection
+	url = https://github.com/ShiqiYu/libfacedetection.git
+[submodule "Libs/opencv"]
+	path = Libs/opencv
+	url = https://github.com/opencv/opencv.git
