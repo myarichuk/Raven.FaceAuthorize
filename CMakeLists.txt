@@ -12,12 +12,12 @@ if(MSVC)
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
-    message("Debug build")
+    message(">>>Debug build")
 elseif(CMAKE_BUILD_TYPE MATCHES Release)
-    message("Release build")
+    message(">>>Release build")
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
 else()
-    message("No build specified, defaulting to debug build")
+    message(">>>No build specified, defaulting to debug build")
     
 endif()
 
