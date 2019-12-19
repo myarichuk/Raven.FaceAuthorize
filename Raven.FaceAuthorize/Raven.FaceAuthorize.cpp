@@ -8,6 +8,7 @@ using namespace std;
 
 int main()
 {
-	cout << "Hello CMake." << endl;
+	const auto img = cv::imread("C:\\Users\\Michael.HRHINOS\\Pictures\\tempsnip.png");
+	cout << "Hello CMake. " <<  img.cols << "x" << img.rows << endl;
 	return 0;
 }
