@@ -1,6 +1,6 @@
 # This function is used to force a build on a dependant project at cmake configuration phase.
 # credit: https://stackoverflow.com/a/23570741/320103
-function (build_opencv target url) #FOLLOWING ARGUMENTS are the CMAKE_ARGS of ExternalProject_Add
+function (build_opencv target url)
 
     set(trigger_build_dir ${CMAKE_BINARY_DIR}/${target})
 

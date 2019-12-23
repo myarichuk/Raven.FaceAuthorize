@@ -83,13 +83,15 @@ void detectAndDraw( Mat& img, CascadeClassifier& cascade,
     equalizeHist( smallImg, smallImg ); 
   
     // Detect faces of different sizes using cascade classifier  
-    cascade.detectMultiScale( smallImg, faces, 1.1,  
-                            2, 0|CASCADE_SCALE_IMAGE, Size(30, 30) ); 
-  
+    cascade.detectMultiScale( smallImg, faces, 1.1,  2, 0|CASCADE_SCALE_IMAGE, Size(30, 30) ); 
+
+
     // Draw circles around the faces 
     for ( size_t i = 0; i < faces.size(); i++ ) 
     { 
         Rect r = faces[i]; 
+		rectangle(img, r,Scalar(0,255,0));
+
         Mat smallImgROI; 
         vector<Rect> nestedObjects; 
         Point center; 
