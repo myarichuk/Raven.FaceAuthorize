@@ -2,7 +2,7 @@
 
 project ("Raven.FaceComparer")
 
-set (EXTERNAL_LIB_DIR "${CMAKE_BINARY_DIR}/external")
+set (EXTERNAL_LIB_DIR "${CMAKE_BINARY_DIR}/external" CACHE STRING "")
 include(ExternalProject)
 
 if(MSVC)
@@ -57,3 +57,4 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 link_libraries(${OpenCV_LIBS})
 
 add_subdirectory ("Raven.FaceComparer")
+
