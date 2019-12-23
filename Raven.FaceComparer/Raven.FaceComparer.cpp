@@ -1,10 +1,14 @@
 ﻿// Raven.FaceAuthorize.cpp : Defines the entry point for the application.
 //
 
-#include "Raven.FaceAuthorize.h"
+#include "Raven.FaceComparer.h"
 #include <opencv2/opencv.hpp>
+#include <opencv2/objdetect.hpp>
+#include <opencv2/highgui.hpp> 
+#include <opencv2/imgproc.hpp> 
 
 using namespace std;
+using namespace cv;
 
 int main()
 {

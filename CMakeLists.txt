@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required (VERSION 3.13)
 
-project ("Raven.FaceAuthorize")
+project ("Raven.FaceComparer")
 
 set (EXTERNAL_LIB_DIR "${CMAKE_BINARY_DIR}/external")
 include(ExternalProject)
@@ -21,32 +21,8 @@ else()
     
 endif()
 
-ExternalProject_Add(OpenCV
-  GIT_REPOSITORY "http://github.com/Itseez/opencv.git"
-  GIT_TAG "master"
-  SOURCE_DIR opencv
-  BINARY_DIR opencv-build
-  CMAKE_ARGS
-    -DBUILD_opencv_core=ON
-    -DBUILD_opencv_imgproc=ON
-    -DBUILD_opencv_contrib=ON
-    -DBUILD_DOCS:BOOL=FALSE
-    -DBUILD_EXAMPLES:BOOL=FALSE
-    -DBUILD_TESTS:BOOL=FALSE
-    -DCMAKE_BUILD_TYPE=CMAKE_BUILD_TYPE
-    -DBUILD_SHARED_LIBS:BOOL=FALSE
-    -DBUILD_NEW_PYTHON_SUPPORT:BOOL=OFF
-    -DBUILD_WITH_DEBUG_INFO=OFF
-    -DWITH_CUDA:BOOL=FALSE
-    -DWITH_FFMPEG:BOOL=FALSE
-    -DBUILD_PERF_TESTS:BOOL=FALSE
-    -DBUILD_PNG:BOOL=ON
-    -DBUILD_JPEG:BOOL=ON
-    -DBUILD_WITH_STATIC_CRT:BOOL=ON
-    -DBUILD_FAT_JAVA_LIB=OFF
-    -DCMAKE_INSTALL_PREFIX:PATH=${EXTERNAL_LIB_DIR}/opencv
-)
-
+include(cmake/build_opencv.cmake)
+build_opencv(OpenCV http://github.com/Itseez/opencv.git)
 set(OPENCV_INCLUDE_DIR ${EXTERNAL_LIB_DIR}/opencv/include/)
 if(NOT WIN32)
   set(OPENCV_LIBRARY_DIR ${EXTERNAL_LIB_DIR}/opencv/lib/)
@@ -80,4 +56,4 @@ message("=>>${OpenCV_LIBS}")
 include_directories(${OpenCV_INCLUDE_DIRS})
 link_libraries(${OpenCV_LIBS})
 
-add_subdirectory ("Raven.FaceAuthorize")
+add_subdirectory ("Raven.FaceComparer")
