@@ -1,5 +1,10 @@
 ﻿cmake_minimum_required (VERSION 3.13)
 
+include(cmake/HunterGate.cmake)
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.23.214.tar.gz"
+    SHA1 "e14bc153a7f16d6a5eeec845fb0283c8fad8c358"
+)
 project ("Raven.FaceComparer")
 
 set (EXTERNAL_LIB_DIR "${CMAKE_BINARY_DIR}/external" CACHE STRING "")
@@ -47,14 +52,18 @@ else()
 endif()
 
 
+hunter_add_package(dlib)
+
 include(${OPENCV_LIBRARY_DIR}/OpenCVConfig.cmake)
 find_library(OpenCV REQUIRED)
+#find_package(OpenCV REQUIRED)
+
+find_package(dlib CONFIG REQUIRED)
 
 message("=>>${OpenCV_INCLUDE_DIRS}")
 message("=>>${OpenCV_LIBS}")
-
-include_directories(${OpenCV_INCLUDE_DIRS})
-link_libraries(${OpenCV_LIBS})
+message("=>> DLIB Includes ${dlib_INCLUDE_DIRS}")
+include_directories(${OpenCV_INCLUDE_DIRS} ${dlib_INCLUDE_DIRS})
+link_libraries(${OpenCV_LIBS} dlib::dlib)
 
 add_subdirectory ("Raven.FaceComparer")
-
