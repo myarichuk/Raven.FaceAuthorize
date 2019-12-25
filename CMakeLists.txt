@@ -1,20 +1,26 @@
-﻿cmake_minimum_required (VERSION 3.13)
-
-include(cmake/HunterGate.cmake)
-HunterGate(
-    URL "https://github.com/ruslo/hunter/archive/v0.23.214.tar.gz"
-    SHA1 "e14bc153a7f16d6a5eeec845fb0283c8fad8c358"
-)
+﻿cmake_minimum_required (VERSION 3.14)
 project ("Raven.FaceComparer")
 
 set (EXTERNAL_LIB_DIR "${CMAKE_BINARY_DIR}/external" CACHE STRING "")
 include(ExternalProject)
 
-if(MSVC)
-	set(CMAKE_CXX_FLAGS_DEBUG "/MTd /Zi /Ob0 /Od /RTC1")
-	set(CMAKE_CXX_FLAGS_RELEASE "/MT /O2 /Ob2 /DNDEBUG")
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+#force windows (Visual Studio) builds to use static runtime
+if (POLICY CMP0054)
+   cmake_policy(SET CMP0054 NEW)
 endif()
+
+#[[
+if (MSVC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    foreach(flag_var
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_DEBUG_INIT CMAKE_C_FLAGS_RELEASE
+        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+        if(${flag_var} MATCHES "/MD")
+        string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+        endif()
+    endforeach(flag_var)
+endif()
+]]
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     message(">>>Debug build")
@@ -28,6 +34,7 @@ endif()
 
 include(cmake/build_opencv.cmake)
 build_opencv(OpenCV http://github.com/Itseez/opencv.git)
+
 set(OPENCV_INCLUDE_DIR ${EXTERNAL_LIB_DIR}/opencv/include/)
 if(NOT WIN32)
   set(OPENCV_LIBRARY_DIR ${EXTERNAL_LIB_DIR}/opencv/lib/)
@@ -51,19 +58,21 @@ else()
   set(OPENCV_LIBRARY_DIR ${EXTERNAL_LIB_DIR}/opencv/${ARCH}/vc${VCVER}/staticlib)
 endif()
 
-
-hunter_add_package(dlib)
+include(cmake/build_dlib.cmake)
+build_dlib(dlib)
 
 include(${OPENCV_LIBRARY_DIR}/OpenCVConfig.cmake)
 find_library(OpenCV REQUIRED)
-#find_package(OpenCV REQUIRED)
 
-find_package(dlib CONFIG REQUIRED)
+set (DLIB_LIBRARY_DIR ${EXTERNAL_LIB_DIR}/dlib/lib/cmake/dlib)
+include(${DLIB_LIBRARY_DIR}/dlibConfig.cmake)
+find_library(dlib CONFIG REQUIRED)
 
 message("=>>${OpenCV_INCLUDE_DIRS}")
 message("=>>${OpenCV_LIBS}")
 message("=>> DLIB Includes ${dlib_INCLUDE_DIRS}")
+message("=>> DLIB Libs ${dlib_LIBRARIES}")
 include_directories(${OpenCV_INCLUDE_DIRS} ${dlib_INCLUDE_DIRS})
-link_libraries(${OpenCV_LIBS} dlib::dlib)
+link_libraries(${OpenCV_LIBS} ${dlib_LIBRARIES})
 
 add_subdirectory ("Raven.FaceComparer")
