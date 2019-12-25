@@ -60,16 +60,6 @@ public:
 	face_analyzer();
 
     void detect_faces(matrix<rgb_pixel> &img, std::vector<matrix<rgb_pixel>> &faces);
-    void get_face_descriptors(const std::vector<matrix<rgb_pixel>> &faces, std::vector<matrix<float,0,1>> &face_descriptors);
-
-    //note: dlib image can be converted to OpenCV image like this: cv::Mat matImage = dlib::toMat<matrix<rgb_pixel>>(img);
-    void draw_rectangle_over_face(cv::Mat& matImg, matrix<rgb_pixel> &face) const
-    {
-	   /* const std::vector<rectangle>::value_type face_rect = face;
-	    cv::rectangle(matImg, 
-	        cv::Point(face_rect.tl_corner().x(), face_rect.tl_corner().y()),
-	        cv::Point(face_rect.br_corner().x(), face_rect.br_corner().y()), 
-	        cv::Scalar(0,255,0));*/
-    }
+    void get_face_descriptors(const std::vector<matrix<rgb_pixel>> &faces, std::vector<matrix<float,0,1>> &face_descriptors);   
 };
 

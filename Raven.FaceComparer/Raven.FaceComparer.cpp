@@ -9,8 +9,8 @@ int main(int argc, char** argv)
 	{
         matrix<rgb_pixel> me_img;
 		load_image(me_img, "me.jpg");
-        matrix<rgb_pixel> other_me;
-        load_image(other_me, "me2.jpg");
+        matrix<rgb_pixel> not_me;
+        load_image(not_me, "not_me.jpg");
         matrix<rgb_pixel> me_with_others;
         load_image(me_with_others, "me_with_others.jpg");        
 
