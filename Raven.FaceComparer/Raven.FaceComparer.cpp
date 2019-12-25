@@ -7,17 +7,44 @@ int main(int argc, char** argv)
 {
 	try
 	{
-	    face_analyzer fa("me.jpg");
-	    std::vector<matrix<rgb_pixel>> faces;
-	    fa.detect_faces(faces);
+        matrix<rgb_pixel> me_img;
+		load_image(me_img, "me.jpg");
+        matrix<rgb_pixel> other_me;
+        load_image(other_me, "me2.jpg");
+        matrix<rgb_pixel> me_with_others;
+        load_image(me_with_others, "me_with_others.jpg");        
+
+        cout << "loaded images" <<endl;
+	    face_analyzer fa;
+
+		std::vector<matrix<rgb_pixel>> faces;
+     	std::vector<matrix<rgb_pixel>> faces2;
+
+		fa.detect_faces(me_img,faces);
+	    fa.detect_faces(me_with_others,faces2);
+
+        cout << "finished with face detection" << endl;
 
         std::vector<matrix<float,0,1>> face_descriptors;
         fa.get_face_descriptors(faces, face_descriptors);
 
-        for(const auto& descriptor : face_descriptors)
-            cout << descriptor << endl;
+		std::vector<matrix<float,0,1>> face_descriptors2;
+        fa.get_face_descriptors(faces2, face_descriptors2);
 
+        cout << "finished detecting facial features" << endl;
 
+        for(size_t i = 0; i < face_descriptors2.size(); i++)
+        {
+            cout << i << ") length(face_descriptor2 - face_descriptors[0]=" << length(face_descriptors2[i] - face_descriptors[0]) <<endl;
+	        if(length(face_descriptors2[i] - face_descriptors[0]) < 0.6)
+	        {
+                cout << "found me on the second image!" << endl;
+		        cv::Mat me_on_other_image = dlib::toMat<matrix<rgb_pixel>>(faces2[i]);
+                cv::imshow("Me in 'me_with_others.jpg'", me_on_other_image);
+                cv::waitKey(0);
+	        }
+        }
+        
 
 		return 0;
 	}

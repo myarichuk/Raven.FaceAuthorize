@@ -1,7 +1,7 @@
 #include "face_analyzer.h"
 
 
-face_analyzer::face_analyzer(string filename)
+face_analyzer::face_analyzer()
 {
     // The first thing we are going to do is load all our models.  First, since we need to
     // find faces in the image we will need a face detector:
@@ -12,10 +12,9 @@ face_analyzer::face_analyzer(string filename)
     // And finally we load the DNN responsible for face recognition.
     
     deserialize("dlib_face_recognition_resnet_model_v1.dat") >> net;
-    load_image(img, filename);   
 }
 
-void face_analyzer::detect_faces(std::vector<matrix<rgb_pixel>> &faces)
+void face_analyzer::detect_faces(matrix<rgb_pixel> &img, std::vector<matrix<rgb_pixel>> &faces)
 {
      //detect all faces on the image
     for (auto face : detector(img))
@@ -34,9 +33,37 @@ void face_analyzer::get_face_descriptors(const std::vector<matrix<rgb_pixel>> &f
     // but vectors from different people will be far apart.  So we can use these vectors to
     // identify if a pair of images are from the same person or from different people.  
     face_descriptors = net(faces);
-}
 
-bool face_analyzer::are_similar(const matrix<float, 0, 1>& faceA, const matrix<float, 0, 1>& faceB) const
-{
-	return length(faceA - faceB) < 0.6;
+    // This next bit of code creates a graph of connected faces and then uses the Chinese whispers graph clustering
+    // algorithm to identify how many people there are and which faces belong to whom.
+    //std::vector<sample_pair> edges;
+    //for (size_t i = 0; i < face_descriptors.size(); ++i)
+    //{
+    //    for (size_t j = i; j < face_descriptors.size(); ++j)
+    //    {
+    //        // Faces are connected in the graph if they are close enough.  Here we check if
+    //        // the distance between two face descriptors is less than 0.6, which is the
+    //        // decision threshold the network was trained to use.  Although you can
+    //        // certainly use any other threshold you find useful.
+    //        if (length(face_descriptors[i]-face_descriptors[j]) < 0.6)
+    //            edges.push_back(sample_pair(i,j));
+    //    }
+    //}
+    //std::vector<unsigned long> labels;
+    //const auto num_clusters = chinese_whispers(edges, labels);
+
+    //// Now let's display the face clustering results on the screen.  You will see that it
+    //// correctly grouped all the faces. 
+    //std::vector<image_window> win_clusters(num_clusters);
+    //for (size_t cluster_id = 0; cluster_id < num_clusters; ++cluster_id)
+    //{
+    //    std::vector<matrix<rgb_pixel>> temp;
+    //    for (size_t j = 0; j < labels.size(); ++j)
+    //    {
+    //        if (cluster_id == labels[j])
+    //            temp.push_back(faces[j]);
+    //    }
+    //    win_clusters[cluster_id].set_title("face cluster " + cast_to_string(cluster_id));
+    //    win_clusters[cluster_id].set_image(tile_images(temp));
+    //}
 }
