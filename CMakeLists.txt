@@ -26,10 +26,8 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
     message(">>>Debug build")
 elseif(CMAKE_BUILD_TYPE MATCHES Release)
     message(">>>Release build")
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
 else()
-    message(">>>No build specified, defaulting to debug build")
-    
+    message(">>>No build specified, defaulting to debug build")    
 endif()
 
 include(cmake/build_opencv.cmake)

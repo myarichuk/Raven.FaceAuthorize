@@ -34,7 +34,7 @@ function (build_dlib target)
             GIT_TAG \"master\"
             SOURCE_DIR dlib
             CMAKE_ARGS
-            #-DDLIB_FORCE_MSVC_STATIC_RUNTIME:BOOL=ON
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DBUILD_SHARED_LIBS:BOOL=OFF
             -DLIB_PNG_SUPPORT:BOOL=OFF
             -DLIB_NO_GUI_SUPPORT:BOOL=ON
