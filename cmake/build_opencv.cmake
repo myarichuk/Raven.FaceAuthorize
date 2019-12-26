@@ -27,7 +27,7 @@ function (build_opencv target url)
         set(CMAKE_CXX_STANDARD 17)
 
         ExternalProject_Add(${target}
-          GIT_REPOSITORY ${url}#\"http://github.com/Itseez/opencv.git\"
+          GIT_REPOSITORY ${url}
           GIT_TAG \"master\"
           SOURCE_DIR opencv
           BINARY_DIR opencv-build

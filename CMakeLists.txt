@@ -4,24 +4,6 @@ project ("Raven.FaceComparer")
 set (EXTERNAL_LIB_DIR "${CMAKE_BINARY_DIR}/external" CACHE STRING "")
 include(ExternalProject)
 
-#force windows (Visual Studio) builds to use static runtime
-if (POLICY CMP0054)
-   cmake_policy(SET CMP0054 NEW)
-endif()
-
-#[[
-if (MSVC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    foreach(flag_var
-        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_DEBUG_INIT CMAKE_C_FLAGS_RELEASE
-        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-        if(${flag_var} MATCHES "/MD")
-        string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-        endif()
-    endforeach(flag_var)
-endif()
-]]
-
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     message(">>>Debug build")
 elseif(CMAKE_BUILD_TYPE MATCHES Release)
@@ -55,6 +37,10 @@ else()
 
   set(OPENCV_LIBRARY_DIR ${EXTERNAL_LIB_DIR}/opencv/${ARCH}/vc${VCVER}/staticlib)
 endif()
+ 
+set(HUNTER_STATUS_DEBUG ON)
+include(cmake/build_raven_client.cmake)
+build_raven_client(raven_client)
 
 include(cmake/build_dlib.cmake)
 build_dlib(dlib)
