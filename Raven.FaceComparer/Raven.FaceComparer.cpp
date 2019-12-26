@@ -1,4 +1,10 @@
 ﻿#include "face_analyzer.h"
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui.hpp> 
+#include <dlib/opencv.h>
+#include <dlib/dnn.h>
+#include <dlib/image_io.h>
+
 #include <iostream>
 
 using namespace std;

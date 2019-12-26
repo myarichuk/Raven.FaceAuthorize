@@ -6,16 +6,9 @@
  */
 
 #pragma once
-#include <opencv2/opencv.hpp>
-#include <opencv2/objdetect.hpp>
-#include <opencv2/highgui.hpp> 
-#include <opencv2/imgproc.hpp> 
-#include <opencv2/core/types_c.h>
 #include <dlib/opencv.h>
 #include <dlib/dnn.h>
 #include <dlib/clustering.h>
-#include <dlib/string.h>
-#include <dlib/image_io.h>
 #include <dlib/image_processing/frontal_face_detector.h>
 
 using namespace dlib;
@@ -51,15 +44,14 @@ using anet_type = loss_metric<fc_no_bias<128,avg_pool_everything<
 
 class face_analyzer
 {
-private:
-    frontal_face_detector detector;
+	frontal_face_detector detector;
     shape_predictor sp;
     anet_type net;
 
 public:
 	face_analyzer();
 
-    void detect_faces(matrix<rgb_pixel> &img, std::vector<matrix<rgb_pixel>> &faces);
+    void detect_faces(const matrix<rgb_pixel> &img, std::vector<matrix<rgb_pixel>> &faces);
     void get_face_descriptors(const std::vector<matrix<rgb_pixel>> &faces, std::vector<matrix<float,0,1>> &face_descriptors);   
 };
 
