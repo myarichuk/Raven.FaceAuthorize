@@ -1,7 +1,39 @@
-﻿cmake_minimum_required (VERSION 3.14)
+﻿cmake_minimum_required (VERSION 3.13)
+set(TESTING_CONFIG_OPT FILEPATH cmake/config.cmake)
+include(cmake/HunterGate.cmake)
+
+HunterGate(
+    URL "https://github.com/cpp-pm/hunter/archive/v0.23.240.tar.gz"
+    SHA1 "ca19f3769e6c80cfdd19d8b12ba5102c27b074e0"
+)
+
 project ("Raven.FaceComparer")
 
+hunter_add_package(OpenSSL)
+hunter_add_package(CURL)
+hunter_add_package(ZLIB)
+hunter_add_package(nlohmann_json)
+
+find_package(nlohmann_json CONFIG REQUIRED)
+find_package(ZLIB CONFIG REQUIRED)
+find_package(OpenSSL REQUIRED)
+find_package(CURL CONFIG REQUIRED)
+
 set (EXTERNAL_LIB_DIR "${CMAKE_BINARY_DIR}/external" CACHE STRING "")
+set (XXHASH_SRC "${EXTERNAL_LIB_DIR}/xxhash")
+include(FetchContent) 
+FetchContent_Declare(
+  xxhash_cpp
+  GIT_REPOSITORY https://github.com/RedSpah/xxhash_cpp.git
+  GIT_TAG        master
+  SOURCE_DIR ${XXHASH_SRC}/repository SUBBUILD_DIR ${XXHASH_SRC}/subbuild  BINARY_DIR ${XXHASH_SRC}/binary
+  )
+
+FetchContent_GetProperties(xxhash_cpp)
+if(NOT xxhash_cpp_POPULATED)  
+  FetchContent_Populate(xxhash_cpp)
+endif()
+
 include(ExternalProject)
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
@@ -37,10 +69,13 @@ else()
 
   set(OPENCV_LIBRARY_DIR ${EXTERNAL_LIB_DIR}/opencv/${ARCH}/vc${VCVER}/staticlib)
 endif()
- 
+  
 set(HUNTER_STATUS_DEBUG ON)
 include(cmake/build_raven_client.cmake)
 build_raven_client(raven_client)
+
+include(${EXTERNAL_LIB_DIR}/raven_client/Raven_CppClient.cmake)
+
 
 include(cmake/build_dlib.cmake)
 build_dlib(dlib)
@@ -56,7 +91,7 @@ message("=>>${OpenCV_INCLUDE_DIRS}")
 message("=>>${OpenCV_LIBS}")
 message("=>> DLIB Includes ${dlib_INCLUDE_DIRS}")
 message("=>> DLIB Libs ${dlib_LIBRARIES}")
-include_directories(${OpenCV_INCLUDE_DIRS} ${dlib_INCLUDE_DIRS})
-link_libraries(${OpenCV_LIBS} ${dlib_LIBRARIES})
+include_directories(${OpenCV_INCLUDE_DIRS} ${dlib_INCLUDE_DIRS} ${EXTERNAL_LIB_DIR}/raven_client/include ${xxhash_cpp_SOURCE_DIR}/xxhash)
+link_libraries(${OpenCV_LIBS} ${dlib_LIBRARIES} RavenDB::Raven_CppClient)
 
 add_subdirectory ("Raven.FaceComparer")

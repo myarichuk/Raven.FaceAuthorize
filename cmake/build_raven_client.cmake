@@ -1,5 +1,6 @@
 # This function is used to force a build on a dependant project at cmake configuration phase.
 # credit: https://stackoverflow.com/a/23570741/320103
+
 function (build_raven_client target)
 
     set(trigger_build_dir ${CMAKE_BINARY_DIR}/${target})
@@ -16,13 +17,14 @@ function (build_raven_client target)
         set(CMAKE_CXX_STANDARD 17)
 
         ExternalProject_Add(${target}
-          GIT_REPOSITORY \"https://github.com/myarichuk/ravendb-cpp-client.git\"
-          GIT_TAG \"hunter-gate-poc\"
+          PREFIX ${CMAKE_BINARY_DIR}/raven-client
+          GIT_REPOSITORY https://github.com/myarichuk/ravendb-cpp-client.git
+          GIT_TAG hunter-gate-poc
           SOURCE_DIR raven-client
-          BINARY_DIR raven-client-build
+          BINARY_DIR raven-client/build
           CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-            -DCMAKE_INSTALL_PREFIX:PATH=\"${EXTERNAL_LIB_DIR}/raven-client\"
+            -DCMAKE_INSTALL_PREFIX:PATH=${EXTERNAL_LIB_DIR}/raven_client
         )
 
         add_custom_target(trigger_${target})
@@ -36,6 +38,6 @@ function (build_raven_client target)
     message(STATUS "MAKE stdout='${stdout}'")
     
     execute_process(COMMAND ${CMAKE_COMMAND} --build ${trigger_build_dir} OUTPUT_VARIABLE stdout ERROR_VARIABLE stderr WORKING_DIRECTORY ${trigger_build_dir} )
-    message(STATUS "BUILD stdout='${stdout}'")
+    message(STATUS "BUILD stdout='${stdout}'")    
     
 endfunction()
