@@ -62,12 +62,12 @@ function (build_opencv target url)
     message("OpenCV CMAKE: ${CMAKE_LIST_CONTENT}")
 
     file(WRITE ${trigger_build_dir}/CMakeLists.txt "${CMAKE_LIST_CONTENT}")
+    message(STATUS "Running CMake configuration on OpenCV, this might take a while...")
     execute_process(COMMAND ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR} ${trigger_build_dir} OUTPUT_VARIABLE stdout ERROR_VARIABLE stderr WORKING_DIRECTORY ${trigger_build_dir} )
-    message(STATUS "MAKE stdout='${stdout}'")
-    message(STATUS "MAKE stderr='${stderr}'")
+    message(STATUS "${stdout}")
 
+    message(STATUS "Building OpenCV, this might take a while...")
     execute_process(COMMAND ${CMAKE_COMMAND} --build ${trigger_build_dir} OUTPUT_VARIABLE stdout ERROR_VARIABLE stderr WORKING_DIRECTORY ${trigger_build_dir} )
-    message(STATUS "BUILD stdout='${stdout}'")
-    message(STATUS "BUILD stderr='${stderr}'")
+    message(STATUS "${stdout}")
 
 endfunction()
